@@ -1,0 +1,14 @@
+/*  ESTOS ESTILO SON PARA EL SITIO */
+
+@import 'bootstrap.min.css';
+@import 'animate.css';
+@import 'style.css';
+@import 'jquery-ui.min.css';
+@import 'plugins/iCheck/custom.css';
+@import 'plugins/toastr/toastr.min.css';
+@import 'plugins/sweetalert/sweetalert.css';
+@import 'plugins/ladda/ladda-themeless.min.css';
+@import 'plugins/morris/morris-0.4.3.min.css';
+
+
+
