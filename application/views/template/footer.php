@@ -46,7 +46,7 @@ foreach ($escuela as $e) {
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 text-center m-t-lg m-b-lg">
                 <p><strong>&copy; <? echo date('Y').' '.$nombre_completo; ?> </strong><br/> 
-                <a href="https://codeelab.com/" target="_blank">Codeelab</p>
+                <a href="http://codeelab.com/" target="_blank">Codeelab</p>
             </div>
         </div>
     </div>
@@ -54,11 +54,13 @@ foreach ($escuela as $e) {
 
 <!-- Mainly scripts -->
 <script src="<?=base_url();?>assets/js/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script src="<?=base_url();?>assets/js/slick.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
+<script src="<?=base_url();?>assets/js/funciones.js"></script>
+<script src="<?=base_url();?>assets/js/slick.js"></script>
 <script src="<?=base_url();?>assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
 <script src="<?=base_url();?>assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
 <!-- Custom and plugin javascript -->
 <script src="<?=base_url();?>assets/js/inspinia.js"></script>

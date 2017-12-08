@@ -36,4 +36,6 @@ class Inicio extends CI_Controller {
 	}
 
 
+
+
 } //CIERRE DE LA CLASE

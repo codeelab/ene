@@ -45,4 +45,5 @@ class Inicio_model extends CI_Model {
 
 
 
+
 } // FIN DE LA CLAE MODELO

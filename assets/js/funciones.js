@@ -1,12 +1,13 @@
 $(document).ready(function(){
+
     $( "#matricula" ).autocomplete({
-      source: "lib/buscaralumno.php",
+      source: "registro/buscarAlumno",
       minLength: 8
     });
 
     $("#matricula").focusout(function(){
       $.ajax({
-          url:'lib/alumno.php',
+          url:'registro/alumno',
           type:'POST',
           dataType:'json',
           data:{matricula:$('#matricula').val()}
@@ -30,7 +31,7 @@ $(document).ready(function(){
     })
   });
 });
-
+/*
 $(document).ready(function() {
     $('#tabla_folios').dataTable( {
          "lengthMenu": [ [5, 10, 15, -1], [5, 10, 15, "All"] ],
@@ -42,7 +43,7 @@ $(document).ready(function() {
     });
 
 });
-
+*/
 
 
 function eliminaTaller(cod){
@@ -240,7 +241,3 @@ function (isConfirm) {
         }
         });
 }
-
-    $(document).ready(function(){
-        load(1);
-    });

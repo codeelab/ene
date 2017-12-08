@@ -9,6 +9,7 @@
     <link href="<?=base_url();?>assets/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" />
     <link href="<?=base_url();?>assets/css/bootstrapValidator.min.css" rel="stylesheet" />
     <link href="<?=base_url();?>assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="<?=base_url();?>assets/css/jquery-ui.min.css" rel="stylesheet" >
     <link href="<?=base_url();?>assets/css/animate.css" rel="stylesheet" />
     <link href="<?=base_url();?>assets/css/style.css" rel="stylesheet" />
     <link href="<?=base_url();?>assets/css/slick.css" rel="stylesheet"/>
