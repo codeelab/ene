@@ -39,6 +39,12 @@ class Inicio_model extends CI_Model {
                         ->get()->result();
     }
 
+    public function medio()
+    {
+        return $this->db->select('*')
+                        ->from('medios')
+                        ->get()->result();
+    }
 
 
 

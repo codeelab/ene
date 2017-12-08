@@ -43,15 +43,16 @@
 
         <div class="col-lg-12 col-md-6 col-xs-12 col-sm-12">
 
-        <?php $attributes = array('class' => 'form-horizontal', 'id' => 'alumno'); ?>
-        <?php echo form_open_multipart('registro/alumno', $attributes); ?>
+        <?php $attributes = array('class' => 'form-horizontal'); ?>
+        <?php echo form_open('registro/registro_alumno', $attributes); ?>
 
             <div class="form-group">
                 <label class="col-sm-2 control-label">
                     <small class="text-uppercase text-muted">Matricula:</small>
                 </label>
                 <div class="col-sm-4">
-                    <input type="text" name="matricula" id="matricula" placeholder="Matricula" class="form-control" autocomplete="off">
+                    <input type="text" name="matricula" id="matricula" placeholder="Matricula" class="form-control" >
+                    <?php echo form_error('matricula'); ?>
                 </div>
                 <label class="col-sm-2 control-label">
                     <small class="text-uppercase text-muted">Correo Personal:</small>
@@ -80,11 +81,33 @@
                 <label class="col-sm-2 control-label">
                     <small class="text-uppercase text-muted">Elija Taller</small>
                 </label>
-                <div class="col-sm-10">
-                    <select class="form-control m-b" name="taller" id="selectCursos">
+                <div class="col-sm-6">
+                    <select class="form-control m-b" name="taller" id="taller">
                       <option value="">---</option>
+                      <?php
+                      if($talleres !== FALSE)
+                      {
+                            foreach ($talleres as $t) {
+                                $cupo = $t->cupo;
+                                if ($cupo > 0)
+                                {
+                                     echo '<option value="'.$t->id_taller.'">'.$t->nombres.'</option>';
+                                }else{
+                                    echo '';
+                                }
+                            }
+                        }else{
+                            echo '<option value="">---</option>';
+                        }
+
+                      ?>
 
                     </select>
+                </div>
+                <label class="col-sm-2 control-label">
+                    <small class="text-uppercase text-muted">Disponibilidad</small>
+                </label>
+                <div class="col-sm-2"><input type="text" class="form-control"  id="cupo" readonly>
                 </div>
             </div>
 
@@ -111,7 +134,20 @@
                 <div class="col-sm-4">
                     <select class="form-control m-b" name="medio" id="medio">
                         <option value="">---</option>
+                      <?php
+                      if($medios !== FALSE)
+                      {
+                            foreach ($medios as $m)
+                            {
 
+                                echo '<option value="'.$m->id_medio.'">'.$m->nombre_medio.'</option>';
+                            }
+
+                        }else{
+                            echo '<option value="">---</option>';
+                        }
+
+                      ?>
                     </select>
                 </div>
                 <div class="col-sm-4">
@@ -127,15 +163,23 @@
 
 
 
-            <button class="btn btn-block btn-rounded ladda-button ladda-button-check btn btn-primary" type="submit">Enviar</button>
+            <button class="btn btn-block btn-rounded ladda-button ladda-button-check btn btn-primary" type="submit" name="submit">Enviar</button>
         <?php echo form_close();?>
-
-
-
 
         </div>
     </div>
-</div>
 
+<br>
+<br>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <?php if($this->session->flashdata('error')){  ?>
+                    <div class="alert alert-danger">
+                        <strong>Oops!</strong> <?php echo $this->session->flashdata('error'); ?>
+                    </div>
+            <?php } ?>
+</div>
+</div>
+<?php echo validation_errors();?>
 
 </section>

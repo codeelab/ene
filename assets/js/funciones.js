@@ -11,13 +11,31 @@ $(document).ready(function(){
           type:'POST',
           dataType:'json',
           data:{matricula:$('#matricula').val()}
-      }).done(function(respuesta){
-          $("#nombre").val(respuesta.nombre);
-          $("#a_paterno").val(respuesta.a_paterno);
-          $("#a_materno").val(respuesta.a_materno);
+      }).done(function(array){
+          //console.log(array[0].nombre);
+          //alert($('#nombre').val(array.nombre));
+          $("#nombre").val(array[0].nombre);
+          $("#a_paterno").val(array[0].a_paterno);
+          $("#a_materno").val(array[0].a_materno);
       });
     });
+
+    $("#taller").change(function(){
+      $.ajax({
+          url:'inicio/taller',
+          type:'POST',
+          dataType:'json',
+          data:{taller:$('#taller').val()}
+      }).done(function(array){
+          //console.log(array[0].cupo);
+          $("#cupo").val(array[0].cupo);
+      });
+    });
+
+
 });
+
+
 
 $(document).ready(function(){
     $("#procedencia").change(function(){
