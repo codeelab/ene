@@ -27,10 +27,13 @@ class Inicio extends CI_Controller {
 		$data['escuela'] = $this->Inicio_model->escuela();
 		$data['costo'] = $this->Inicio_model->costo();
 		$data['ponente'] = $this->Inicio_model->ponente();
-		$data['talleres'] = $this->Inicio_model->taller();
+		$data['tallerr'] = $this->Inicio_model->talleres();
         $data['medios'] = $this->Inicio_model->medio();
+        $data['taller'] = $this->Inicio_model->taller();
+        $data['instituto'] = $this->Inicio_model->institucion();
 
 		$this->load->view('template/header',$data);
+        $this->load->view('template/menu');
 		$this->load->view('paginas/'.$pagina, $data);
 		$this->load->view('template/footer');
 

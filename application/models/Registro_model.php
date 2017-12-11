@@ -8,19 +8,9 @@ class Registro_model extends CI_Model {
         $this->load->database();
     }
 
-
-    public function matriculasEne($matricula)
-    {
-        $this->db->select('matricula');
-        $this->db->like('matricula', $matricula);
-        $query = $this->db->get('matricula');
-        return $query->result();
-    }
-
     public function alumnosENE($matricula)
     {
         $this->db->select('nombre, a_paterno, a_materno');
-        //$this->db->where('matricula = 131611330000');
         $this->db->where('matricula',$matricula);
         $query = $this->db->get('matricula');
         return $query->result();
@@ -35,13 +25,40 @@ class Registro_model extends CI_Model {
         return $query->result();
     }
 
-
-    public function guardar()
+    public function verifica_username($username)
     {
-        echo 'guardado';
+        $this->db->where('username',$username);
+        $consulta = $this->db->get('usuarios');
+         if($consulta->num_rows() == 1)
+         {
+            $row = $consulta->row();
+            return $row->username;
+         }
     }
 
+    function disponibilidad_usuario($username)
+    {
+        if(!$this->form_validation->is_unique($username, 'usuarios.username')){
 
+            return false;
+
+        }else{
+            return true;
+        }
+    }
+
+    public function registro_alumnoENE($datas)
+    {
+        return $this->db->insert('usuarios',$datas);
+    }
+
+    public function tutoras($id)
+    {
+        $this->db->select('nombre, a_paterno, a_materno');
+        $this->db->where('escuela',$id);
+        $query = $this->db->get('tutoras');
+        return $query->result();
+    }
 
 
 

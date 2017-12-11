@@ -54,13 +54,14 @@ foreach ($escuela as $e) {
 
 <!-- Mainly scripts -->
 <script src="<?=base_url();?>assets/js/jquery-3.1.1.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="<?=base_url();?>assets/js/jquery.easy-autocomplete.min.js"></script>
 <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
+<script src="<?=base_url();?>assets/js/bootstrapValidator.min.js"></script>
+<script src="<?=base_url();?>assets/js/zxcvbn.js"></script>
 <script src="<?=base_url();?>assets/js/funciones.js"></script>
 <script src="<?=base_url();?>assets/js/slick.js"></script>
 <script src="<?=base_url();?>assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
 <script src="<?=base_url();?>assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
 <!-- Custom and plugin javascript -->
 <script src="<?=base_url();?>assets/js/inspinia.js"></script>
@@ -85,6 +86,37 @@ foreach ($escuela as $e) {
             event.preventDefault();
             $("#navbar").collapse('hide');
         });
+
+        var options = {
+
+          url: "<?=base_url();?>registro/buscarAlumno",
+
+          getValue: "matricula",
+
+          list: {
+            showAnimation:
+            {
+                type: "fade", //normal|slide|fade
+                time: 400,
+                callback: function() {}
+            },
+
+            hideAnimation:
+            {
+                type: "slide", //normal|slide|fade
+                time: 400,
+                callback: function() {}
+            },
+              maxNumberOfElements: 1,
+              match: {
+              enabled: true
+            }
+          }
+        };
+
+        $("#matricula").easyAutocomplete(options);
+
+
     });
 
     var cbpAnimatedHeader = (function() {

@@ -28,7 +28,7 @@
 
 <div class="header-taller"></div>
 <div class="col-lg-12 text-center">
-     <h1>Solicitud de Registro Alumna ENE <br> Foro Nacional de Educación Preescolar <?=date('Y') ?></h1>
+     <h1>Solicitud de Registro a Tutoras <br> Foro Nacional de Educación Preescolar <?=date('Y') ?></h1>
 </div>
 <section class="container features animated fadeInRight">
 
@@ -44,14 +44,21 @@
         <div class="col-lg-12 col-md-6 col-xs-12 col-sm-12">
 
         <?php $attributes = array('class' => 'form-horizontal' ,'id'=>'registro'); ?>
-        <?php echo form_open('registro/registro_alumno', $attributes); ?>
+        <?php echo form_open('registro/registro_tutora', $attributes); ?>
 
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-                    <label class="control-label"><p class="text-uppercase text-form">Matricula:</p></label>
-                    <input type="text" name="matricula" id="matricula" placeholder="Matricula" class="form-control" autocomplete="off"  value="<?php echo set_value('matricula'); ?>">
-                    <?php echo form_error('matricula', '<div class="text-danger">', '</div>'); ?>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <label class="control-label"><p class="text-uppercase text-form">Escuela:</p></label>
+                     <?php echo form_dropdown('escuela_id', $instituto, set_value('escuela_id'), 'id="escuela_id" class="form-control m-b"'); ?>
                 </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <label class="control-label"><p class="text-uppercase text-form">Nombre:</p></label>
+                    <select>jdkjdkjdksdkj</select>
+                </div>
+            </div>
+
+
+            <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                    <label class="control-label"><p class="text-uppercase text-form">Nombre:</p></label>
                     <input type="text" name="nombre" id="nombre" placeholder="Nombre" class="form-control" autocomplete="off" readonly value="<?php echo set_value('nombre'); ?>">
@@ -116,7 +123,7 @@
             </div>
         </div>
 <br>
-            <input type="hidden" class="form-control" id="rol_id" name="rol_id" value="5">
+            <input type="hidden" class="form-control" id="rol_id" name="rol_id" value="6">
             <input type="hidden" class="form-control" id="status_id" name="status_id" value="1">
             <button class="btn btn-block btn-rounded ladda-button ladda-button-check btn btn-primary" type="submit">Enviar</button>
         <?php echo form_close();?>
