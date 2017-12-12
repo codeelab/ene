@@ -29,19 +29,7 @@ $(document).ready(function(){
       });
     });
 
-    $("#escuela_id").change(function(){
-      $.ajax({
-          url:'registro/escuela_tutora',
-          type:'POST',
-          dataType:'json',
-          data:{escuela_id:$('#escuela_id').val()}
-      }).done(function(array){
-          //console.log(array[0].nombre);
-         $("#nombre").val(array[0].nombre+array[0].a_paterno);
-         // $("#a_paterno").val(array[0].a_paterno);
-         // $("#a_materno").val(array[0].a_materno);
-      });
-    });
+
 
 
 // CARGA LOS DATOS EN LA VENTA ALUMNO CUANDO HAY ERROR

@@ -51,14 +51,17 @@ class Registro extends CI_Controller {
 
         }
 
-        public function escuela_tutora()
+        public function escuela_tutora($escuela_id)
         {
-            //$id = '1';
-            $id   = $this->security->xss_clean($this->input->post('escuela_id'));
-            $array       = $this->Registro_model->tutoras($id);
-
-            echo json_encode($array);
-
+            $tutoras = $this->Registro_model->tutoras($escuela_id);
+            if( empty ( $tutoras ) )
+                return '{ "nombre": "No hay nombres disponibles" }';
+            $arr_cidade = array();
+            foreach ($tutoras as $t) {
+                $arr_t[] = '{"id_municipio":' . $t->id_municipio . ',"nombre":"' . $t->nombre_mun . '"}';
+            }
+            echo '[ ' . implode(",",$arr_t) . ']';
+            return;
         }
 
         public function validate_email($c_personal)
@@ -139,6 +142,99 @@ class Registro extends CI_Controller {
                 redirect('exito');
             }
         }
+
+
+        public function registro_tutora()
+        {
+
+            $this->form_validation->set_rules('escuela_id', 'Escuela', 'trim|required|xss_clean');
+            $this->form_validation->set_rules('c_personal', 'Correo Personal', 'trim|required|callback_validate_email|valid_email|xss_clean');
+            $this->form_validation->set_rules('c_personal2', 'Confirmación Correo', 'trim|required|callback_validate_email|valid_email|matches[c_personal]|xss_clean');
+            $this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|xss_clean');
+            $this->form_validation->set_rules('a_paterno', 'Apellido Paterno', 'trim|required|xss_clean');
+            $this->form_validation->set_rules('a_materno', 'Apellido Materno', 'trim|required|xss_clean');
+            $this->form_validation->set_rules('terminos', 'Terminos', 'trim|required|xss_clean');
+            $this->form_validation->set_rules('username', 'Usuario', 'required|trim|min_length[2]|max_length[100]|callback_comprobar_usuario_ajax|xss_clean');
+
+            $this->form_validation->set_message('required', 'El campo %s es obligatorio');
+
+
+            if ($this->form_validation->run() == FALSE)
+            {
+                $this->view();
+            }
+            else
+            {
+                $datas = array(
+                    'escuela_id'    => $this->security->xss_clean($this->input->post('escuela_id')),
+                    'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
+                    'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
+                    'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
+                    'c_personal'   => $this->security->xss_clean($this->input->post('c_personal')),
+                    'username'     => $this->security->xss_clean($this->input->post('username')),
+                    'password'     => $this->security->xss_clean($this->input->post('password')),
+                    'terminos'     => $this->security->xss_clean($this->input->post('terminos')),
+                    'rol_id'       => $this->security->xss_clean($this->input->post('rol_id')),
+                    'status_id'    => $this->security->xss_clean($this->input->post('status_id'))
+                );
+                //$this->Registro_model->registro_tutoras($datas);
+                redirect('exito');
+            }
+        }
+
+        public function registro_estudiante()
+        {
+
+                $this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('a_paterno', 'Apellido Paterno', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('a_materno', 'Apellido Materno', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('institucion', 'Institución Educativa', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('c_personal', 'Correo Personal', 'trim|required|callback_validate_email|valid_email|xss_clean');
+                $this->form_validation->set_rules('c_personal2', 'Confirmación Correo', 'trim|required|callback_validate_email|valid_email|matches[c_personal]|xss_clean');
+                $this->form_validation->set_rules('terminos', 'Terminos', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('username', 'Usuario', 'required|trim|min_length[5]|max_length[10]|callback_comprobar_usuario_ajax|xss_clean');
+
+                $this->form_validation->set_message('required', 'El %s es obligatorio');
+                $this->form_validation->set_message('min_length', 'El %s debe tener al menos %s caracteres.');
+                $this->form_validation->set_message('max_length', 'El %s no puede tener más de %s carácteres');
+
+
+                if ($this->form_validation->run() == FALSE)
+                {
+                    $data['titulo'] = ucfirst('ENE MORELIA - '.date('Y'));
+                    $data['title'] = strtoupper('ENE MORELIA');
+                    $data['escuela'] = $this->Inicio_model->escuela();
+                    $data['menu'] = $this->Inicio_model->menu();
+                    $this->load->view('template/header',$data);
+                    $this->load->view('paginas/estudiante', 'refreesh',$data);
+                    $this->load->view('template/footer');
+                }
+                else
+                {
+                    $datas = array(
+                        'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
+                        'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
+                        'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
+                        'institucion'  => $this->security->xss_clean($this->input->post('institucion')),
+                        'c_personal'   => $this->security->xss_clean($this->input->post('c_personal')),
+                        'username'     => $this->security->xss_clean($this->input->post('username')),
+                        'password'     => $this->security->xss_clean($this->input->post('password')),
+                        'terminos'     => $this->security->xss_clean($this->input->post('terminos')),
+                        'rol_id'       => $this->security->xss_clean($this->input->post('rol_id')),
+                        'status_id'    => $this->security->xss_clean($this->input->post('status_id'))
+                    );
+                    //$this->Registro_model->registro_alumnoENE($datas);
+                    redirect('exito');
+                }
+
+        }
+
+
+
+
+
+
+
 
 
 

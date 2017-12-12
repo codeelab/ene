@@ -1,34 +1,6 @@
-<div class="navbar-wrapper">
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header page-scroll">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="<?=base_url();?>"><?=$title;?></a>
-                </div>
-                <div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav navbar-right">
-                    <?php
-                        foreach ($menu as $m) {
-                        $nombre_menu = mb_convert_encoding($m->nombre, "UTF-8");
-                        $url_menu = mb_convert_encoding($m->url, "UTF-8");
-                        echo '<li><a class="page-scroll" href="../'.$url_menu.'">'.$nombre_menu.'</a></li>';
-                        }
-                    ?>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-</div>
-
-
 <div class="header-taller"></div>
 <div class="col-lg-12 text-center">
-     <h1>Solicitud de Registro a Tutoras <br> Foro Nacional de Educación Preescolar <?=date('Y') ?></h1>
+     <h1>Registro de Alumnos de nivel licenciatura de cualquier institución educativa <br> Foro Nacional de Educación Preescolar <?=date('Y') ?></h1>
 </div>
 <section class="container features animated fadeInRight">
 
@@ -44,13 +16,9 @@
         <div class="col-lg-12 col-md-6 col-xs-12 col-sm-12">
 
         <?php $attributes = array('class' => 'form-horizontal' ,'id'=>'registro'); ?>
-        <?php echo form_open('registro/registro_tutora', $attributes); ?>
+        <?php echo form_open('registro/registro_estudiante', $attributes); ?>
 
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-                    <label class="control-label"><p class="text-uppercase text-form">Escuela:</p></label>
-                     <?php echo form_dropdown('escuela_id', $instituto, set_value('escuela_id'), 'id="escuela_id" class="form-control m-b"'); ?>
-                </div>
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                    <label class="control-label"><p class="text-uppercase text-form">Nombre:</p></label>
                     <input type="text" name="nombre" id="nombre" placeholder="Nombre" class="form-control" autocomplete="off"  value="<?php echo set_value('nombre'); ?>">
@@ -65,6 +33,14 @@
                     <label class="control-label"><p class="text-uppercase text-form">Apellido Materno:</p></label>
                     <input type="text" name="a_materno" id="a_materno" placeholder="Apellido Materno" class="form-control" autocomplete="off" value="<?php echo set_value('a_materno'); ?>" >
                     <?php echo form_error('a_materno', '<div class="text-danger">', '</div>'); ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                   <label class="control-label"><p class="text-uppercase text-form">Institución:</p></label>
+                    <input type="text" name="institucion" id="institucion" placeholder="Institucion Educativa" class="form-control" autocomplete="off"  value="<?php echo set_value('institucion'); ?>">
+                    <?php echo form_error('institucion', '<div class="text-danger">', '</div>'); ?>
                 </div>
             </div>
 
@@ -125,13 +101,5 @@
 
 <br>
 <br>
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-            <?php if($this->session->flashdata('error')){  ?>
-                    <div class="alert alert-danger">
-                        <strong>Oops!</strong> <?php echo $this->session->flashdata('error'); ?>
-                    </div>
-            <?php } ?>
-</div>
 </div>
 </section>

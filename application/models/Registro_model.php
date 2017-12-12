@@ -52,14 +52,16 @@ class Registro_model extends CI_Model {
         return $this->db->insert('usuarios',$datas);
     }
 
-    public function tutoras($id)
-    {
-        $this->db->select('nombre, a_paterno, a_materno');
-        $this->db->where('escuela',$id);
-        $query = $this->db->get('tutoras');
-        return $query->result();
-    }
 
+
+    public function tutoras($escuela_id)
+    {
+        return $this->db->select('*')
+                        ->from('tutoras')
+                        ->join('institucion', 'id_institucion = escuela ')
+                        ->where(array('escuela' => $escuela_id) )
+                        ->get()->result();
+    }
 
 
 }
