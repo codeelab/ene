@@ -122,7 +122,13 @@ class Registro extends CI_Controller {
 
             if ($this->form_validation->run() == FALSE)
             {
-                $this->view();
+                    $data['titulo'] = ucfirst('ENE MORELIA - '.date('Y'));
+                    $data['title'] = strtoupper('ENE MORELIA');
+                    $data['escuela'] = $this->Inicio_model->escuela();
+                    $data['menu'] = $this->Inicio_model->menu();
+                    $this->load->view('template/header',$data);
+                    $this->load->view('paginas/alumno', 'refreesh',$data);
+                    $this->load->view('template/footer');
             }
             else
             {
@@ -161,7 +167,13 @@ class Registro extends CI_Controller {
 
             if ($this->form_validation->run() == FALSE)
             {
-                $this->view();
+                    $data['titulo'] = ucfirst('ENE MORELIA - '.date('Y'));
+                    $data['title'] = strtoupper('ENE MORELIA');
+                    $data['escuela'] = $this->Inicio_model->escuela();
+                    $data['menu'] = $this->Inicio_model->menu();
+                    $this->load->view('template/header',$data);
+                    $this->load->view('paginas/tutora', 'refreesh',$data);
+                    $this->load->view('template/footer');
             }
             else
             {
@@ -191,8 +203,9 @@ class Registro extends CI_Controller {
                 $this->form_validation->set_rules('institucion', 'Institución Educativa', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('c_personal', 'Correo Personal', 'trim|required|callback_validate_email|valid_email|xss_clean');
                 $this->form_validation->set_rules('c_personal2', 'Confirmación Correo', 'trim|required|callback_validate_email|valid_email|matches[c_personal]|xss_clean');
-                $this->form_validation->set_rules('terminos', 'Terminos', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('terminos', 'Terminos', 'required');
                 $this->form_validation->set_rules('username', 'Usuario', 'required|trim|min_length[5]|max_length[10]|callback_comprobar_usuario_ajax|xss_clean');
+                $this->form_validation->set_rules('password', 'Contraseña', 'required|trim|xss_clean');
 
                 $this->form_validation->set_message('required', 'El %s es obligatorio');
                 $this->form_validation->set_message('min_length', 'El %s debe tener al menos %s caracteres.');
@@ -231,7 +244,51 @@ class Registro extends CI_Controller {
 
 
 
+        public function registro_asistente()
+        {
 
+                $this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('a_paterno', 'Apellido Paterno', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('a_materno', 'Apellido Materno', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('c_personal', 'Correo Personal', 'trim|required|callback_validate_email|valid_email|xss_clean');
+                $this->form_validation->set_rules('c_personal2', 'Confirmación Correo', 'trim|required|callback_validate_email|valid_email|matches[c_personal]|xss_clean');
+                $this->form_validation->set_rules('terminos', 'Terminos', 'required');
+                $this->form_validation->set_rules('username', 'Usuario', 'required|trim|min_length[5]|max_length[10]|callback_comprobar_usuario_ajax|xss_clean');
+                $this->form_validation->set_rules('password', 'Contraseña', 'required|trim|xss_clean');
+
+                $this->form_validation->set_message('required', 'El %s es obligatorio');
+                $this->form_validation->set_message('min_length', 'El %s debe tener al menos %s caracteres.');
+                $this->form_validation->set_message('max_length', 'El %s no puede tener más de %s carácteres');
+
+
+                if ($this->form_validation->run() == FALSE)
+                {
+                    $data['titulo'] = ucfirst('ENE MORELIA - '.date('Y'));
+                    $data['title'] = strtoupper('ENE MORELIA');
+                    $data['escuela'] = $this->Inicio_model->escuela();
+                    $data['menu'] = $this->Inicio_model->menu();
+                    $this->load->view('template/header',$data);
+                    $this->load->view('paginas/asistente', 'refreesh',$data);
+                    $this->load->view('template/footer');
+                }
+                else
+                {
+                    $datas = array(
+                        'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
+                        'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
+                        'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
+                        'c_personal'   => $this->security->xss_clean($this->input->post('c_personal')),
+                        'username'     => $this->security->xss_clean($this->input->post('username')),
+                        'password'     => $this->security->xss_clean($this->input->post('password')),
+                        'terminos'     => $this->security->xss_clean($this->input->post('terminos')),
+                        'rol_id'       => $this->security->xss_clean($this->input->post('rol_id')),
+                        'status_id'    => $this->security->xss_clean($this->input->post('status_id'))
+                    );
+                    //$this->Registro_model->registro_alumnoENE($datas);
+                    redirect('exito');
+                }
+
+        }
 
 
 
