@@ -32,6 +32,7 @@ class Inicio extends CI_Controller {
         $data['taller'] = $this->Inicio_model->taller();
         $data['instituto'] = $this->Inicio_model->institucion();
 
+
 		$this->load->view('template/header',$data);
         $this->load->view('template/menu');
 		$this->load->view('paginas/'.$pagina, $data);

@@ -92,5 +92,17 @@
 
 <br>
 <br>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <?php if($this->session->flashdata('success')){ ?>
+                    <div class="alert alert-success">
+                        <strong>Genial!</strong> <?php echo $this->session->flashdata('success'); ?>
+                    </div>
+                <?php }else if($this->session->flashdata('error')){  ?>
+                    <div class="alert alert-danger">
+                        <strong>Oops!</strong> <?php echo $this->session->flashdata('error'); ?>
+                    </div>
+                <?php } ?>
+</div>
 </div>
 </section>

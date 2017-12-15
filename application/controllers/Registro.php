@@ -7,7 +7,7 @@ class Registro extends CI_Controller {
     {
         parent::__construct();
         $this->load->model(array('Registro_model','Inicio_model'));
-        $this->load->library(array('session','form_validation','user_agent'));
+        $this->load->library(array('session','form_validation','user_agent','encrypt'));
         $this->load->helper(array('url','form','security'));
         $this->load->database('default');
     }
@@ -107,6 +107,7 @@ class Registro extends CI_Controller {
 
         public function registro_alumno()
         {
+            $this->load->model("Correo_registros");
 
             $this->form_validation->set_rules('matricula', 'Matricula', 'trim|required|numeric|xss_clean');
             $this->form_validation->set_rules('c_personal', 'Correo Personal', 'trim|required|callback_validate_email|valid_email|xss_clean');
@@ -120,38 +121,79 @@ class Registro extends CI_Controller {
             $this->form_validation->set_message('required', 'El campo %s es obligatorio');
 
 
-            if ($this->form_validation->run() == FALSE)
-            {
-                    $data['titulo'] = ucfirst('ENE MORELIA - '.date('Y'));
-                    $data['title'] = strtoupper('ENE MORELIA');
-                    $data['escuela'] = $this->Inicio_model->escuela();
-                    $data['menu'] = $this->Inicio_model->menu();
-                    $this->load->view('template/header',$data);
-                    $this->load->view('paginas/alumno', 'refreesh',$data);
-                    $this->load->view('template/footer');
-            }
-            else
-            {
-                $datas = array(
-                    'matricula'    => $this->security->xss_clean($this->input->post('matricula')),
-                    'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
-                    'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
-                    'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
-                    'c_personal'   => $this->security->xss_clean($this->input->post('c_personal')),
-                    'username'     => $this->security->xss_clean($this->input->post('username')),
-                    'password'     => $this->security->xss_clean($this->input->post('password')),
-                    'terminos'     => $this->security->xss_clean($this->input->post('terminos')),
-                    'rol_id'       => $this->security->xss_clean($this->input->post('rol_id')),
-                    'status_id'    => $this->security->xss_clean($this->input->post('status_id'))
-                );
-                $this->Registro_model->registro_alumnoENE($datas);
-                redirect('exito');
-            }
+                if ($this->form_validation->run() == FALSE)
+                {
+                        $data['titulo'] = ucfirst('ENE MORELIA - '.date('Y'));
+                        $data['title'] = strtoupper('ENE MORELIA');
+                        $data['escuela'] = $this->Inicio_model->escuela();
+                        $data['menu'] = $this->Inicio_model->menu();
+                        $this->load->view('template/header',$data);
+                        $this->load->view('paginas/alumno', 'refreesh',$data);
+                        $this->load->view('template/footer');
+                }
+                else
+                {
+
+                    $datos = array(
+                        'matricula'    => $this->security->xss_clean($this->input->post('matricula')),
+                        'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
+                        'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
+                        'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
+                        'c_personal'   => $this->security->xss_clean($this->input->post('c_personal')),
+                        'username'     => $this->security->xss_clean($this->input->post('username')),
+                        'password'     => $this->security->xss_clean(do_hash($this->input->post('password'))),
+                        'passwords'    => $this->security->xss_clean($this->input->post('password')),
+                        'terminos'     => $this->security->xss_clean($this->input->post('terminos')),
+                        'rol_id'       => $this->security->xss_clean($this->input->post('rol_id')),
+                        'status_id'    => $this->security->xss_clean($this->input->post('status_id'))
+                    );
+                    $correo     = $this->input->post('c_personal');
+                    $emails     = $this->Correo_registros->registro($datos);
+                    $estado     = 'Bienvenid@ al Foro Nacional de Educación Preescolar 2018';
+
+                    $config['protocol']     = 'smtp';
+                    $config["smtp_host"]    = 'mail.foroene.com';
+                    $config["smtp_user"]    = 'contacto@foroene.com';
+                    $config["smtp_pass"]    = 'enemorelia2018';
+                    $config["smtp_port"]    = '587';
+                    $config['smtp_crypto']  = 'tls';
+                    $config['charset']      = 'utf-8';
+                    $config['wordwrap']     = TRUE;
+                    $config['validate']     = true;
+                    $config['mailtype']     = 'html';
+                    $config['smtp_timeout'] = '5';
+                    $config['priority']     = '1';
+                    $this->load->library('email');
+                    $this->email->initialize($config);
+                    $this->email->from('contacto@foroene.com', 'Foro Nacional de Educación Preescolar 2018');
+                    $this->email->reply_to('foroenemorelia@gmail.com', 'Foro Nacional de Educación Preescolar 2018');
+                    $this->email->to($correo);
+                    $this->email->subject($estado);
+                    $this->email->message($emails);
+
+
+                    if($this->email->send())
+                    {
+                        //echo $this->email->print_debugger();
+                        //$this->Registro_model->registro_alumnoENE($datas);
+                        redirect('exito');
+
+                    }else
+                    {
+                       //echo $this->email->print_debugger();
+                       $this->session->set_flashdata("error", "Se ha generado un error al intentar registrarse, por lo cual no se ha enviado el correo indicando su registro!, favor de intentar nuevamente.");
+                        $this->load->view('template/header',$data);
+                        $this->load->view('paginas/asistente', 'refreesh',$data);
+                        $this->load->view('template/footer');
+                    }
+
+                }
         }
 
 
         public function registro_tutora()
         {
+            $this->load->model("Correo_registros");
 
             $this->form_validation->set_rules('escuela_id', 'Escuela', 'trim|required|xss_clean');
             $this->form_validation->set_rules('c_personal', 'Correo Personal', 'trim|required|callback_validate_email|valid_email|xss_clean');
@@ -171,31 +213,72 @@ class Registro extends CI_Controller {
                     $data['title'] = strtoupper('ENE MORELIA');
                     $data['escuela'] = $this->Inicio_model->escuela();
                     $data['menu'] = $this->Inicio_model->menu();
+                    $data['instituto'] = $this->Inicio_model->institucion();
                     $this->load->view('template/header',$data);
                     $this->load->view('paginas/tutora', 'refreesh',$data);
                     $this->load->view('template/footer');
             }
             else
             {
-                $datas = array(
+                $datos = array(
                     'escuela_id'    => $this->security->xss_clean($this->input->post('escuela_id')),
                     'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
                     'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
                     'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
                     'c_personal'   => $this->security->xss_clean($this->input->post('c_personal')),
                     'username'     => $this->security->xss_clean($this->input->post('username')),
-                    'password'     => $this->security->xss_clean($this->input->post('password')),
+                    'password'     => $this->security->xss_clean(do_hash($this->input->post('password'))),
+                    'passwords'    => $this->security->xss_clean($this->input->post('password')),
                     'terminos'     => $this->security->xss_clean($this->input->post('terminos')),
                     'rol_id'       => $this->security->xss_clean($this->input->post('rol_id')),
                     'status_id'    => $this->security->xss_clean($this->input->post('status_id'))
                 );
-                //$this->Registro_model->registro_tutoras($datas);
-                redirect('exito');
-            }
+                    $correo     = $this->input->post('c_personal');
+                    $emails     = $this->Correo_registros->registro($datos);
+                    $estado     = 'Bienvenid@ al Foro Nacional de Educación Preescolar 2018';
+
+                    $config['protocol']     = 'smtp';
+                    $config["smtp_host"]    = 'mail.foroene.com';
+                    $config["smtp_user"]    = 'contacto@foroene.com';
+                    $config["smtp_pass"]    = 'enemorelia2018';
+                    $config["smtp_port"]    = '587';
+                    $config['smtp_crypto']  = 'tls';
+                    $config['charset']      = 'utf-8';
+                    $config['wordwrap']     = TRUE;
+                    $config['validate']     = true;
+                    $config['mailtype']     = 'html';
+                    $config['smtp_timeout'] = '5';
+                    $config['priority']     = '1';
+                    $this->load->library('email');
+                    $this->email->initialize($config);
+                    $this->email->from('contacto@foroene.com', 'Foro Nacional de Educación Preescolar 2018');
+                    $this->email->reply_to('foroenemorelia@gmail.com', 'Foro Nacional de Educación Preescolar 2018');
+                    $this->email->to($correo);
+                    $this->email->subject($estado);
+                    $this->email->message($emails);
+
+
+                    if($this->email->send())
+                    {
+                        //echo $this->email->print_debugger();
+                        //$this->Registro_model->registro_alumnoENE($datas);
+                        redirect('exito');
+
+                    }else
+                    {
+                       //echo $this->email->print_debugger();
+                       $this->session->set_flashdata("error", "Se ha generado un error al intentar registrarse, por lo cual no se ha enviado el correo indicando su registro!, favor de intentar nuevamente.");
+                        $this->load->view('template/header',$data);
+                        $this->load->view('paginas/asistente', 'refreesh',$data);
+                        $this->load->view('template/footer');
+                    }
+
+                }
         }
 
         public function registro_estudiante()
         {
+                $this->load->model("Correo_registros");
 
                 $this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('a_paterno', 'Apellido Paterno', 'trim|required|xss_clean');
@@ -224,28 +307,67 @@ class Registro extends CI_Controller {
                 }
                 else
                 {
-                    $datas = array(
+                    $datos = array(
                         'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
                         'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
                         'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
                         'institucion'  => $this->security->xss_clean($this->input->post('institucion')),
                         'c_personal'   => $this->security->xss_clean($this->input->post('c_personal')),
                         'username'     => $this->security->xss_clean($this->input->post('username')),
-                        'password'     => $this->security->xss_clean($this->input->post('password')),
+                        'password'     => $this->security->xss_clean(do_hash($this->input->post('password'))),
+                        'passwords'    => $this->security->xss_clean($this->input->post('password')),
                         'terminos'     => $this->security->xss_clean($this->input->post('terminos')),
                         'rol_id'       => $this->security->xss_clean($this->input->post('rol_id')),
                         'status_id'    => $this->security->xss_clean($this->input->post('status_id'))
                     );
-                    //$this->Registro_model->registro_alumnoENE($datas);
-                    redirect('exito');
-                }
+                    $correo     = $this->input->post('c_personal');
+                    $emails     = $this->Correo_registros->registro($datos);
+                    $estado     = 'Bienvenid@ al Foro Nacional de Educación Preescolar 2018';
 
+                    $config['protocol']     = 'smtp';
+                    $config["smtp_host"]    = 'mail.foroene.com';
+                    $config["smtp_user"]    = 'contacto@foroene.com';
+                    $config["smtp_pass"]    = 'enemorelia2018';
+                    $config["smtp_port"]    = '587';
+                    $config['smtp_crypto']  = 'tls';
+                    $config['charset']      = 'utf-8';
+                    $config['wordwrap']     = TRUE;
+                    $config['validate']     = true;
+                    $config['mailtype']     = 'html';
+                    $config['smtp_timeout'] = '5';
+                    $config['priority']     = '1';
+                    $this->load->library('email');
+                    $this->email->initialize($config);
+                    $this->email->from('contacto@foroene.com', 'Foro Nacional de Educación Preescolar 2018');
+                    $this->email->reply_to('foroenemorelia@gmail.com', 'Foro Nacional de Educación Preescolar 2018');
+                    $this->email->to($correo);
+                    $this->email->subject($estado);
+                    $this->email->message($emails);
+
+
+                    if($this->email->send())
+                    {
+                        //echo $this->email->print_debugger();
+                        //$this->Registro_model->registro_alumnoENE($datas);
+                        redirect('exito');
+
+                    }else
+                    {
+                       //echo $this->email->print_debugger();
+                       $this->session->set_flashdata("error", "Se ha generado un error al intentar registrarse, por lo cual no se ha enviado el correo indicando su registro!, favor de intentar nuevamente.");
+                        $this->load->view('template/header',$data);
+                        $this->load->view('paginas/asistente', 'refreesh',$data);
+                        $this->load->view('template/footer');
+                    }
+
+                }
         }
 
 
 
         public function registro_asistente()
         {
+                $this->load->model("Correo_registros");
 
                 $this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('a_paterno', 'Apellido Paterno', 'trim|required|xss_clean');
@@ -273,21 +395,59 @@ class Registro extends CI_Controller {
                 }
                 else
                 {
-                    $datas = array(
+                    $datos = array(
                         'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
                         'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
                         'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
                         'c_personal'   => $this->security->xss_clean($this->input->post('c_personal')),
                         'username'     => $this->security->xss_clean($this->input->post('username')),
-                        'password'     => $this->security->xss_clean($this->input->post('password')),
+                        'password'     => $this->security->xss_clean(do_hash($this->input->post('password'))),
+                        'passwords'    => $this->security->xss_clean($this->input->post('password')),
                         'terminos'     => $this->security->xss_clean($this->input->post('terminos')),
                         'rol_id'       => $this->security->xss_clean($this->input->post('rol_id')),
                         'status_id'    => $this->security->xss_clean($this->input->post('status_id'))
                     );
-                    //$this->Registro_model->registro_alumnoENE($datas);
-                    redirect('exito');
-                }
+                    $correo     = $this->input->post('c_personal');
+                    $emails     = $this->Correo_registros->registro($datos);
+                    $estado     = 'Bienvenid@ al Foro Nacional de Educación Preescolar 2018';
 
+                    $config['protocol']     = 'smtp';
+                    $config["smtp_host"]    = 'mail.foroene.com';
+                    $config["smtp_user"]    = 'contacto@foroene.com';
+                    $config["smtp_pass"]    = 'enemorelia2018';
+                    $config["smtp_port"]    = '587';
+                    $config['smtp_crypto']  = 'tls';
+                    $config['charset']      = 'utf-8';
+                    $config['wordwrap']     = TRUE;
+                    $config['validate']     = true;
+                    $config['mailtype']     = 'html';
+                    $config['smtp_timeout'] = '5';
+                    $config['priority']     = '1';
+                    $this->load->library('email');
+                    $this->email->initialize($config);
+                    $this->email->from('contacto@foroene.com', 'Foro Nacional de Educación Preescolar 2018');
+                    $this->email->reply_to('foroenemorelia@gmail.com', 'Foro Nacional de Educación Preescolar 2018');
+                    $this->email->to($correo);
+                    $this->email->subject($estado);
+                    $this->email->message($emails);
+
+
+                    if($this->email->send())
+                    {
+                        //echo $this->email->print_debugger();
+                        //$this->Registro_model->registro_alumnoENE($datas);
+                        redirect('exito');
+
+                    }else
+                    {
+                       //echo $this->email->print_debugger();
+                       $this->session->set_flashdata("error", "Se ha generado un error al intentar registrarse, por lo cual no se ha enviado el correo indicando su registro!, favor de intentar nuevamente.");
+                        $this->load->view('template/header',$data);
+                        $this->load->view('paginas/asistente', 'refreesh',$data);
+                        $this->load->view('template/footer');
+                    }
+
+                }
         }
 
 
