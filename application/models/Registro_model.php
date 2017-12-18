@@ -47,12 +47,6 @@ class Registro_model extends CI_Model {
         }
     }
 
-    public function registro_alumnoENE($datas)
-    {
-        return $this->db->insert('usuarios',$datas);
-    }
-
-
 
     public function tutoras($escuela_id)
     {
@@ -62,6 +56,17 @@ class Registro_model extends CI_Model {
                         ->where(array('escuela' => $escuela_id) )
                         ->get()->result();
     }
+
+
+    public function registro_usuarios($datas)
+    {
+        return $this->db->insert('usuarios',$datas);
+    }
+
+
+
+
+
 
 
 }

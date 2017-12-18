@@ -135,6 +135,13 @@ class Registro extends CI_Controller {
                 {
 
                     $datos = array(
+                        'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
+                        'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
+                        'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
+                        'username'     => $this->security->xss_clean($this->input->post('username')),
+                        'passwords'    => $this->security->xss_clean($this->input->post('password'))
+                    );
+                    $datas = array(
                         'matricula'    => $this->security->xss_clean($this->input->post('matricula')),
                         'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
                         'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
@@ -142,7 +149,6 @@ class Registro extends CI_Controller {
                         'c_personal'   => $this->security->xss_clean($this->input->post('c_personal')),
                         'username'     => $this->security->xss_clean($this->input->post('username')),
                         'password'     => $this->security->xss_clean(do_hash($this->input->post('password'))),
-                        'passwords'    => $this->security->xss_clean($this->input->post('password')),
                         'terminos'     => $this->security->xss_clean($this->input->post('terminos')),
                         'rol_id'       => $this->security->xss_clean($this->input->post('rol_id')),
                         'status_id'    => $this->security->xss_clean($this->input->post('status_id'))
@@ -175,7 +181,8 @@ class Registro extends CI_Controller {
                     if($this->email->send())
                     {
                         //echo $this->email->print_debugger();
-                        //$this->Registro_model->registro_alumnoENE($datas);
+                        $this->Registro_model->registro_usuarios($datas);
+                        $this->session->set_flashdata("success", "HAS COMPLETADO TU REGISTRO DE ALUMNA ENE CON ÉXITO!");
                         redirect('exito');
 
                     }else
@@ -183,7 +190,7 @@ class Registro extends CI_Controller {
                        //echo $this->email->print_debugger();
                        $this->session->set_flashdata("error", "Se ha generado un error al intentar registrarse, por lo cual no se ha enviado el correo indicando su registro!, favor de intentar nuevamente.");
                         $this->load->view('template/header',$data);
-                        $this->load->view('paginas/asistente', 'refreesh',$data);
+                        $this->load->view('paginas/alumno', 'refreesh',$data);
                         $this->load->view('template/footer');
                     }
 
@@ -221,6 +228,13 @@ class Registro extends CI_Controller {
             else
             {
                 $datos = array(
+                    'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
+                    'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
+                    'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
+                    'username'     => $this->security->xss_clean($this->input->post('username')),
+                    'passwords'    => $this->security->xss_clean($this->input->post('password'))
+                );
+                $datas = array(
                     'escuela_id'    => $this->security->xss_clean($this->input->post('escuela_id')),
                     'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
                     'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
@@ -228,7 +242,6 @@ class Registro extends CI_Controller {
                     'c_personal'   => $this->security->xss_clean($this->input->post('c_personal')),
                     'username'     => $this->security->xss_clean($this->input->post('username')),
                     'password'     => $this->security->xss_clean(do_hash($this->input->post('password'))),
-                    'passwords'    => $this->security->xss_clean($this->input->post('password')),
                     'terminos'     => $this->security->xss_clean($this->input->post('terminos')),
                     'rol_id'       => $this->security->xss_clean($this->input->post('rol_id')),
                     'status_id'    => $this->security->xss_clean($this->input->post('status_id'))
@@ -261,7 +274,8 @@ class Registro extends CI_Controller {
                     if($this->email->send())
                     {
                         //echo $this->email->print_debugger();
-                        //$this->Registro_model->registro_alumnoENE($datas);
+                        $this->Registro_model->registro_usuarios($datas);
+                        $this->session->set_flashdata("success", "HAS COMPLETADO TU REGISTRO DE TUTORA CON ÉXITO!");
                         redirect('exito');
 
                     }else
@@ -269,7 +283,7 @@ class Registro extends CI_Controller {
                        //echo $this->email->print_debugger();
                        $this->session->set_flashdata("error", "Se ha generado un error al intentar registrarse, por lo cual no se ha enviado el correo indicando su registro!, favor de intentar nuevamente.");
                         $this->load->view('template/header',$data);
-                        $this->load->view('paginas/asistente', 'refreesh',$data);
+                        $this->load->view('paginas/tutora', 'refreesh',$data);
                         $this->load->view('template/footer');
                     }
 
@@ -311,11 +325,17 @@ class Registro extends CI_Controller {
                         'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
                         'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
                         'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
+                        'username'     => $this->security->xss_clean($this->input->post('username')),
+                        'passwords'    => $this->security->xss_clean($this->input->post('password'))
+                    );
+                    $datas = array(
+                        'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
+                        'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
+                        'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
                         'institucion'  => $this->security->xss_clean($this->input->post('institucion')),
                         'c_personal'   => $this->security->xss_clean($this->input->post('c_personal')),
                         'username'     => $this->security->xss_clean($this->input->post('username')),
                         'password'     => $this->security->xss_clean(do_hash($this->input->post('password'))),
-                        'passwords'    => $this->security->xss_clean($this->input->post('password')),
                         'terminos'     => $this->security->xss_clean($this->input->post('terminos')),
                         'rol_id'       => $this->security->xss_clean($this->input->post('rol_id')),
                         'status_id'    => $this->security->xss_clean($this->input->post('status_id'))
@@ -348,7 +368,8 @@ class Registro extends CI_Controller {
                     if($this->email->send())
                     {
                         //echo $this->email->print_debugger();
-                        //$this->Registro_model->registro_alumnoENE($datas);
+                        $this->Registro_model->registro_usuarios($datas);
+                        $this->session->set_flashdata("success", "HAS COMPLETADO TU REGISTRO DE ESTUDIANTE CON ÉXITO!");
                         redirect('exito');
 
                     }else
@@ -356,7 +377,7 @@ class Registro extends CI_Controller {
                        //echo $this->email->print_debugger();
                        $this->session->set_flashdata("error", "Se ha generado un error al intentar registrarse, por lo cual no se ha enviado el correo indicando su registro!, favor de intentar nuevamente.");
                         $this->load->view('template/header',$data);
-                        $this->load->view('paginas/asistente', 'refreesh',$data);
+                        $this->load->view('paginas/estudiante', 'refreesh',$data);
                         $this->load->view('template/footer');
                     }
 
@@ -399,10 +420,16 @@ class Registro extends CI_Controller {
                         'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
                         'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
                         'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
+                        'username'     => $this->security->xss_clean($this->input->post('username')),
+                        'passwords'    => $this->security->xss_clean($this->input->post('password'))
+                    );
+                    $datas = array(
+                        'nombre'       => $this->security->xss_clean($this->input->post('nombre')),
+                        'a_paterno'    => $this->security->xss_clean($this->input->post('a_paterno')),
+                        'a_materno'    => $this->security->xss_clean($this->input->post('a_materno')),
                         'c_personal'   => $this->security->xss_clean($this->input->post('c_personal')),
                         'username'     => $this->security->xss_clean($this->input->post('username')),
                         'password'     => $this->security->xss_clean(do_hash($this->input->post('password'))),
-                        'passwords'    => $this->security->xss_clean($this->input->post('password')),
                         'terminos'     => $this->security->xss_clean($this->input->post('terminos')),
                         'rol_id'       => $this->security->xss_clean($this->input->post('rol_id')),
                         'status_id'    => $this->security->xss_clean($this->input->post('status_id'))
@@ -435,7 +462,8 @@ class Registro extends CI_Controller {
                     if($this->email->send())
                     {
                         //echo $this->email->print_debugger();
-                        //$this->Registro_model->registro_alumnoENE($datas);
+                        $this->Registro_model->registro_usuarios($datas);
+                        $this->session->set_flashdata("success", "HAS COMPLETADO TU REGISTRO DE ASISTENTE CON ÉXITO!");
                         redirect('exito');
 
                     }else

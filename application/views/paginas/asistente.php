@@ -82,7 +82,7 @@
             </div>
         </div>
 <br>
-            <input type="hidden" class="form-control" id="rol_id" name="rol_id" value="6">
+            <input type="hidden" class="form-control" id="rol_id" name="rol_id" value="8">
             <input type="hidden" class="form-control" id="status_id" name="status_id" value="1">
             <button class="btn btn-block btn-rounded ladda-button ladda-button-check btn btn-primary" type="submit">Enviar</button>
         <?php echo form_close();?>

@@ -16,9 +16,10 @@ class Login_model extends CI_Model {
         if($query->num_rows() == 1)
         {
             return $query->row();
+
         }else{
-            $this->session->set_flashdata('usuario_incorrecto','El usuario o la contraseña son incorrectos. Por favor intenténtelo nuevamente.');
-            redirect(base_url().'login');
+            $this->session->set_flashdata('error','El usuario o la contraseña son incorrectos. Por favor intenténtelo nuevamente.');
+            redirect('login');
         }
     }
 

@@ -15,9 +15,11 @@
                     <?=form_open(base_url().'login/acceso')?>
                         <div class="form-group">
                             <input type="text" class="form-control" id="username" name="username" placeholder="Usuario" >
+                            <?php echo form_error('username', '<div class="alert alert-danger">', '</div>'); ?>
                         </div>
                         <div class="form-group">
                             <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña">
+                            <?php echo form_error('password', '<div class="alert alert-danger">', '</div>'); ?>
                         </div>
                         <button type="submit" class="btn btn-primary block full-width m-b">Ingreso</button>
 
@@ -34,7 +36,6 @@
                         <strong>Oops!</strong> <?php echo $this->session->flashdata('error'); ?>
                     </div>
                 <?php } ?>
-
             </div>
         </div>
         <hr/>
